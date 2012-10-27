@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>AJAX STACKOVERFLOW API TEST 1</title>
+<script type="text/javascript">
+function loadAPIResponse()
+{
+	var apiCall
+	var xmlhttp;
+  
+	xmlhttp=new XMLHttpRequest();
+	  
+	xmlhttp.onreadystatechange=function()
+	{
+	var question = answer = date = score = repulation = null;
+	
+	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+		var response = JSON.parse(xmlhttp.responseText);
+    //	console.log(response.items[0].question_id);
+	//	var topAnswer = response.items[0].question_id;
+	//	document.getElementById('myDiv').innerHTML = topAnswer;
+	
+		for (var i = 0; i < response.items.length; i++)
+			{
+			question = response.items[i].question_id;
+	//		console.log("question id is " + question);
+			answer = response.items[i].answer_id;
+	//		console.log("answer id is " + answer);
+			date = response.items[i].creation_date;
+			score = response.items[i].score;
+			reputation = response.items[i].owner.reputation;
+	//		console.log("repuation is " + reputation);
+			document.getElementById('myDiv').innerHTML = "<ul><li>Question: " + question + "</li><li>Answer: "
+			+ answer + "</li><li>Date (unix): " + date + "</li><li>score: " + score + "</li><li>reputation: "
+			+ reputation + "</li></ul>";
+			}
+		}
+	}
+  
+	
+	apiCall = "http://api.stackexchange.com/2.1/answers?fromdate=1349067600&site=stackoverflow&tagged=" +document.getElementById("tag").value;
+	console.log ("apiCall is " +apiCall);
+	xmlhttp.open("GET",apiCall,true);
+	xmlhttp.send();
+
+}
+</script>
+</head>
+<body>
+
+<h2>Select a subject to return posts on since October 1</h2>
+<div id="myDiv"><i>Let AJAX change this text</i></div>
+<form>
+	<select id="tag">
+        <option value="javascript">javascript</option>
+		<option value="css">css</option>
+    </select>
+	<button type="button" onclick="loadAPIResponse()">Return Results</button>
+</form>
+
+</body>
+</html>
