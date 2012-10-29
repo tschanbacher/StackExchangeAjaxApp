@@ -7,12 +7,20 @@ function loadAPIResponse()
 {
 	var apiCall
 	var xmlhttp;
+	var response
 	
+	var questionsArray;
 	var myDate;
 	var myEpoch;
 	var myYear;
 	var myMonth;
 	var myDay;
+	
+	var question;
+	var score;
+	var createDate;
+	var title;
+	var noAnswers;
   
 	xmlhttp=new XMLHttpRequest();
 	  
@@ -22,25 +30,43 @@ function loadAPIResponse()
 	
 	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
 		{
-		var response = JSON.parse(xmlhttp.responseText);
-    //	console.log(response.items[0].question_id);
-	//	var topAnswer = response.items[0].question_id;
-	//	document.getElementById('myDiv').innerHTML = topAnswer;
-	
+		response = JSON.parse(xmlhttp.responseText);
+		
+		questionsArray = new Array();
 		for (var i = 0; i < response.items.length; i++)
-			{
+			{				
 			question = response.items[i].question_id;
-	//		console.log("question id is " + question);
-			answer = response.items[i].answer_id;
-	//		console.log("answer id is " + answer);
-			date = response.items[i].creation_date;
+		//	console.log("question id is " + question);
 			score = response.items[i].score;
-			reputation = response.items[i].owner.reputation;
-	//		console.log("repuation is " + reputation);
-			document.getElementById('myDiv').innerHTML = "<ul><li>Question: " + question + "</li><li>Answer: "
-			+ answer + "</li><li>Date (unix): " + myEpoch + "</li><li>score: " + score + "</li><li>reputation: "
-			+ reputation + "</li></ul>";
+		//	console.log("score is " + score);
+			createDate = response.items[i].creation_date;
+		//	console.log("creation date is " + createDate);
+			title = response.items[i].title;
+		//	console.log("title is " + title);
+			noAnswers = response.items[i].answer_count;
+		//	console.log("number of answers is " + noAnswers);
+			
+			questionsArray[i] = new Array(question, score, createDate, title, noAnswers);
+			
 			}
+
+			console.log("length of question arry is " +questionsArray.length);
+			console.log("30th elem in array is " + questionsArray[29]);
+			
+		//MAKE THIS A FUNCTION TO DISPLAY PARSED RESULTS ON PAGE
+		var monthToInt = parseInt(document.getElementById("month").value);
+		monthToInt++;
+		//console.log("monthToInt is: " +monthToInt);
+		document.getElementById('myDiv').innerHTML = "<h3>Questions posted since " +monthToInt +"/"
+		+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3>";
+		for (var j = 0; j < 10; j++)
+			{
+			document.getElementById('myDiv').innerHTML += "<ul><li>QuestionID: " + questionsArray[j][0]
+			+ "</li><li>Votes: "	+ questionsArray[j][1] + "</li><li>Asked date (unix): " + questionsArray[j][2]
+			+ "</li><li>Title: " + questionsArray[j][3] + "</li><li>number of answers: " + questionsArray[j][4]
+			+ "</li></ul>";
+			}
+	
 		}
 	}
 	
@@ -54,17 +80,18 @@ function loadAPIResponse()
 	console.log("Unix time is " + myEpoch);
   
 	
-	apiCall = "http://api.stackexchange.com/2.1/answers?fromdate="+myEpoch+"&site=stackoverflow&tagged=" +document.getElementById("tag").value;
+	apiCall = "http://api.stackexchange.com/2.1/questions?fromdate="+myEpoch+"&tagged=" +document.getElementById("tag").value+ "&site=stackoverflow&order=desc&sort=votes"
 	console.log ("apiCall is " +apiCall);
 	xmlhttp.open("GET",apiCall,true);
 	xmlhttp.send();
+	
 
 }
 </script>
 </head>
 <body>
 
-<h2>Select a subject to return posts on since October 1</h2>
+<h2>Select a subject to return highest scored questions from that date</h2>
 <div id="myDiv"><i>Let AJAX change this text</i></div>
 <form>
 	<select id="tag">
