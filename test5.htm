@@ -23,84 +23,64 @@ function loadAPIResponse()
 	var noAnswers;
 	
 	var epochDate;
+	var myDate;
 	var humanDate;
   
 	xmlhttp=new XMLHttpRequest();
 	  
-	xmlhttp.onreadystatechange=function()
-	{
-	var question = answer = date = score = repulation = null;
-	
-	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-		response = JSON.parse(xmlhttp.responseText);
+	xmlhttp.onreadystatechange=function() {
+		var question = answer = date = score = repulation = null;
 		
-		questionsArray = new Array();
-		for (var i = 0; i < response.items.length; i++)
-			{				
-			question = response.items[i].question_id;
-		//	console.log("question id is " + question);
-			score = response.items[i].score;
-		//	console.log("score is " + score);
-			createDate = response.items[i].creation_date;
-		//	console.log("creation date is " + createDate);
-			title = response.items[i].title;
-		//	console.log("title is " + title);
-			noAnswers = response.items[i].answer_count;
-		//	console.log("number of answers is " + noAnswers);
+		  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			response = JSON.parse(xmlhttp.responseText);
 			
-			questionsArray[i] = new Array(question, score, createDate, title, noAnswers);
-			
+			//parse results and put in array
+			questionsArray = new Array();
+			for (var i = 0; i < response.items.length; i++) {				
+				question = response.items[i].question_id;
+				score = response.items[i].score;
+				createDate = response.items[i].creation_date;
+				title = response.items[i].title;
+				noAnswers = response.items[i].answer_count;
+				questionsArray[i] = new Array(question, score, createDate, title, noAnswers);
+			}	
+				
+			//Output results to page appended to myDiv
+			var monthToInt = parseInt(document.getElementById("month").value);
+			monthToInt++;
+			document.getElementById('myDiv').innerHTML = "<h3>Questions posted since " +monthToInt +"/"
+			+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3>";
+			for (var j = 0; j < 10; j++) {
+				document.getElementById('myDiv').innerHTML += "<ul><li>votes: "	+ questionsArray[j][1]
+				+ "</li><li>asked date: " + epochToHumanDate(questionsArray[j][2])
+				+ "</li><li>number of answers: " + questionsArray[j][4]
+				+ "</li><li><a href=http://stackoverflow.com/questions/" + questionsArray[j][0]
+				+ " target='new'>" + questionsArray[j][3] + "</a></li></ul>";
+				epochDate = questionsArray[j][2];
 			}
-
-			console.log("length of question arry is " +questionsArray.length);
-			console.log("30th elem in array is " + questionsArray[29]);
-			
-		function epochToHumanDate(epochDate) {
-			var myDate;
-			myDate = new Date(epochDate * 1000);
-			humanDate = myDate.toLocaleDateString();
-			//console.log("humanDate is " + humanDate);
-			return humanDate;
-		}	
-			
-		//MAKE THIS A FUNCTION TO DISPLAY PARSED RESULTS ON PAGE
-		var monthToInt = parseInt(document.getElementById("month").value);
-		monthToInt++;
-		console.log("monthToInt is: " +monthToInt);
-		document.getElementById('myDiv').innerHTML = "<h3>Questions posted since " +monthToInt +"/"
-		+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3>";
-		for (var j = 0; j < 10; j++)
-			{
-			document.getElementById('myDiv').innerHTML += "<ul><li>QuestionID: " + questionsArray[j][0]
-			+ "</li><li>Votes: "	+ questionsArray[j][1] + "</li><li>Asked date: " + epochToHumanDate(epochDate)
-			+ "</li><li>number of answers: " + questionsArray[j][4]
-			+ "</li><li><a href=http://stackoverflow.com/questions/" + questionsArray[j][0] + " target='new'>" + questionsArray[j][3] + "</a></li></ul>";
-			epochDate = questionsArray[j][2];
-			//console.log("typeOf epochDate is: " + typeof(epochDate));
-			//epochToHumanDate(epochDate);
-			//console.log("result of epochToHumanDate func is " + epochToHumanDate(epochDate));
-			}
-	
+		
 		}
 	}
 	
+	function epochToHumanDate(epochDate) {
+		myDate = new Date(epochDate * 1000);
+		humanDate = myDate.toLocaleDateString();
+		return humanDate;
+	}
+	
+	//change form date to epoch time for api call
 	myYear = document.getElementById("year").value
 	myMonth = document.getElementById("month").value
 	myDay = document.getElementById("day").value
 	myDate = new Date(myYear, myMonth, myDay);
-	console.log("myDate is " + myDate.toString());
-	//myDate = new Date("October 17, 2012 09:00:00"); // Your timezone!
-	myEpoch = myDate.getTime()/1000.0;
-	console.log("Unix time is " + myEpoch);
-  
+	myEpoch = myDate.getTime()/1000.0;	
 	
+	//build api call into string and send as ajax request
 	apiCall = "http://api.stackexchange.com/2.1/questions?fromdate="+myEpoch+"&tagged=" +document.getElementById("tag").value+ "&site=stackoverflow&order=desc&sort=votes"
 	console.log ("apiCall is " +apiCall);
 	xmlhttp.open("GET",apiCall,true);
 	xmlhttp.send();
 	
-
 }
 </script>
 </head>
@@ -110,8 +90,15 @@ function loadAPIResponse()
 <div id="myDiv"><i>Let AJAX change this text</i></div>
 <form>
 	<select id="tag">
+		<option value="ajax">ajax</option>
+		<option value="css">CSS</option>
+		<option value="css3">CSS 3</option>
+		<option value="django">django</option>
         <option value="javascript">javascript</option>
-		<option value="css">css</option>
+		<option value="json">JSON</option>
+		<option value="jquery">jQuery</option>
+		<option value="jsp">JSP</option>
+		<option value="ruby-on-rails">ruby on rails</option>
     </select>
 	<select id="year">
         <option value="2012">2012</option>
