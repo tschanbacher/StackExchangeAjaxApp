@@ -21,6 +21,9 @@ function loadAPIResponse()
 	var createDate;
 	var title;
 	var noAnswers;
+	
+	var epochDate;
+	var humanDate;
   
 	xmlhttp=new XMLHttpRequest();
 	  
@@ -53,18 +56,30 @@ function loadAPIResponse()
 			console.log("length of question arry is " +questionsArray.length);
 			console.log("30th elem in array is " + questionsArray[29]);
 			
+		function epochToHumanDate(epochDate) {
+			var myDate;
+			myDate = new Date(epochDate * 1000);
+			humanDate = myDate.toLocaleDateString();
+			//console.log("humanDate is " + humanDate);
+			return humanDate;
+		}	
+			
 		//MAKE THIS A FUNCTION TO DISPLAY PARSED RESULTS ON PAGE
 		var monthToInt = parseInt(document.getElementById("month").value);
 		monthToInt++;
-		//console.log("monthToInt is: " +monthToInt);
+		console.log("monthToInt is: " +monthToInt);
 		document.getElementById('myDiv').innerHTML = "<h3>Questions posted since " +monthToInt +"/"
 		+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3>";
 		for (var j = 0; j < 10; j++)
 			{
 			document.getElementById('myDiv').innerHTML += "<ul><li>QuestionID: " + questionsArray[j][0]
-			+ "</li><li>Votes: "	+ questionsArray[j][1] + "</li><li>Asked date (unix): " + questionsArray[j][2]
-			+ "</li><li>Title: " + questionsArray[j][3] + "</li><li>number of answers: " + questionsArray[j][4]
-			+ "</li></ul>";
+			+ "</li><li>Votes: "	+ questionsArray[j][1] + "</li><li>Asked date: " + epochToHumanDate(epochDate)
+			+ "</li><li>number of answers: " + questionsArray[j][4]
+			+ "</li><li><a href=http://stackoverflow.com/questions/" + questionsArray[j][0] + " target='new'>" + questionsArray[j][3] + "</a></li></ul>";
+			epochDate = questionsArray[j][2];
+			//console.log("typeOf epochDate is: " + typeof(epochDate));
+			//epochToHumanDate(epochDate);
+			//console.log("result of epochToHumanDate func is " + epochToHumanDate(epochDate));
 			}
 	
 		}
