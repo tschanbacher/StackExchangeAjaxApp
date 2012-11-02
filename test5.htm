@@ -23,7 +23,7 @@ function loadAPIResponse()
 	xmlhttp=new XMLHttpRequest();
 	  
 	xmlhttp.onreadystatechange=function() {
-		var question = answer = date = score = repulation = null;
+		var question = score = createDate = title = noAnswers = null;
 		
 		  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 			response = JSON.parse(xmlhttp.responseText);
@@ -47,8 +47,8 @@ function loadAPIResponse()
 			+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3>";
 			for (var j = 0; j < 10; j++) {
 				document.getElementById('myDiv').innerHTML += "<ul><li>votes: "	+ questionsArray[j].title
-				+ "</li><li>asked date: " + epochToHumanDate(questionsArray[j].creation_date)
-				+ "</li><li>number of answers: " + questionsArray[j].ansert_count
+				+ "</li><li>asked date: " + epochToHumanDate(questionsArray[j].createDate)
+				+ "</li><li>number of answers: " + questionsArray[j].noAnswers
 				+ "</li><li><a href=http://stackoverflow.com/questions/" + questionsArray[j].question_id
 				+ " target='new'>" + questionsArray[j].title + "</a></li></ul>";
 				epochDate = questionsArray[j].creation_date;
