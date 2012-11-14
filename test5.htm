@@ -1,156 +1,85 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title>AJAX STACKOVERFLOW API TEST 1</title>
-<script type="text/javascript">
-function loadAPIResponse()
-{
-	var apiCall
-	var xmlhttp;
-	var response
-	
-	var questionsArray;
-	var myDate;
-	var myEpoch;
-	var myYear;
-	var myMonth;
-	var myDay;
-
-	var epochDate;
-	var myDate;
-	var humanDate;
-  
-	xmlhttp=new XMLHttpRequest();
-	  
-	xmlhttp.onreadystatechange=function() {
-		var question = score = createDate = title = noAnswers = null;
-		
-		  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-			response = JSON.parse(xmlhttp.responseText);
-			
-			//parse results and put in array
-			questionsArray = new Array();
-			for (var i = 0; i < response.items.length; i++) {
-			    var question = new Object();			
-				question.question_id = response.items[i].question_id;
-				question.score = response.items[i].score;
-				question.createDate = response.items[i].creation_date;
-				question.title = response.items[i].title;
-				question.noAnswers = response.items[i].answer_count;
-				questionsArray[i] = question;
-			}	
-				
-			//Output results to page appended to myDiv
-			var monthToInt = parseInt(document.getElementById("month").value);
-			monthToInt++;
-			document.getElementById('myDiv').innerHTML = "<h3>Questions posted since " +monthToInt +"/"
-			+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3>";
-			for (var j = 0; j < 10; j++) {
-				document.getElementById('myDiv').innerHTML += "<ul><li>votes: "	+ questionsArray[j].title
-				+ "</li><li>asked date: " + epochToHumanDate(questionsArray[j].createDate)
-				+ "</li><li>number of answers: " + questionsArray[j].noAnswers
-				+ "</li><li><a href=http://stackoverflow.com/questions/" + questionsArray[j].question_id
-				+ " target='new'>" + questionsArray[j].title + "</a></li></ul>";
-				epochDate = questionsArray[j].creation_date;
-			}
-		
-		}
-	}
-	
-	function epochToHumanDate(epochDate) {
-		myDate = new Date(epochDate * 1000);
-		humanDate = myDate.toLocaleDateString();
-		return humanDate;
-	}
-	
-	//change form date to epoch time for api call
-	myYear = document.getElementById("year").value
-	myMonth = document.getElementById("month").value
-	myDay = document.getElementById("day").value
-	myDate = new Date(myYear, myMonth, myDay);
-	myEpoch = myDate.getTime()/1000.0;	
-	
-	//build api call into string and send as ajax request
-	apiCall = "http://api.stackexchange.com/2.1/questions?fromdate="+myEpoch+"&tagged=" +document.getElementById("tag").value+ "&site=stackoverflow&order=desc&sort=votes"
-	console.log ("apiCall is " +apiCall);
-	xmlhttp.open("GET",apiCall,true);
-	xmlhttp.send();
-	
-}
-</script>
+<title>Stackoverflow Web Technology Query App</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css">
+<script type="text/javascript" src="stackoverflowQuery.js"></script>
 </head>
 <body>
-
-<h2>Select a subject to return highest scored questions from that date</h2>
-<div id="myDiv"><i>Let AJAX change this text</i></div>
-<form>
-	<select id="tag">
-		<option value="ajax">ajax</option>
-		<option value="css">CSS</option>
-		<option value="css3">CSS 3</option>
-		<option value="django">django</option>
-        <option value="javascript">javascript</option>
-		<option value="json">JSON</option>
-		<option value="jquery">jQuery</option>
-		<option value="jsp">JSP</option>
-		<option value="ruby-on-rails">ruby on rails</option>
-    </select>
-	<select id="year">
-        <option value="2012">2012</option>
-		<option value="2011">2011</option>
-		<option value="2010">2010</option>
-		<option value="2009">2009</option>
-		<option value="2008">2008</option>
-    </select>
-	<select id="month">
-        <option value="0">January</option>
-		<option value="1">February</option>
-		<option value="2">March</option>
-		<option value="3">April</option>
-		<option value="4">May</option>
-		<option value="5">June</option>
-		<option value="6">July</option>
-		<option value="7">August</option>
-		<option value="8">September</option>
-		<option value="9">October</option>
-		<option value="10">November</option>
-		<option value="11">December</option>
-    </select>
-		<select id="day">
-        <option value="1">1st</option>
-		<option value="2">2nd</option>
-		<option value="3">3rd</option>
-		<option value="4">4th</option>
-		<option value="5">5th</option>
-		<option value="6">6th</option>
-		<option value="7">7th</option>
-		<option value="8">8th</option>
-		<option value="9">9th</option>
-		<option value="10">10th</option>
-		<option value="11">11th</option>
-		<option value="12">12th</option>
-		<option value="13">13th</option>
-		<option value="14">14th</option>
-		<option value="15">15th</option>
-		<option value="16">16th</option>
-		<option value="17">17th</option>
-		<option value="18">18th</option>
-		<option value="19">19th</option>
-		<option value="20">20th</option>
-		<option value="21">21st</option>
-		<option value="22">22nd</option>
-		<option value="23">23rd</option>
-		<option value="24">24th</option>
-		<option value="25">25th</option>
-		<option value="26">26th</option>
-		<option value="27">27th</option>
-		<option value="28">28th</option>
-		<option value="29">29th</option>
-		<option value="30">30th</option>
-		<option value="31">31st</option>
-    </select>
-	<button type="button" onclick="loadAPIResponse()">Return Results</button>
-</form>
-
+<div id="wrapper">
+	<h2>Select a subject to return highest scored questions from that date</h2>
+	<div id="summary">This application returns questions from stackoverflow.com, based on the specified web technology tag and date range. The 10 questions returned have the most votes for that tag category from stackoverflow users. This application uses Ajax to query the stackexchange API with results returned in JSON.</div>
+	<form>
+		<select id="tag">
+			<option value="ajax">ajax</option>
+			<option value="css">CSS</option>
+			<option value="css3">CSS 3</option>
+			<option value="django">django</option>
+			<option value="javascript">javascript</option>
+			<option value="json">JSON</option>
+			<option value="jquery">jQuery</option>
+			<option value="jsp">JSP</option>
+			<option value="ruby-on-rails">ruby on rails</option>
+		</select>
+		<select id="year">
+			<option value="2012">2012</option>
+			<option value="2011">2011</option>
+			<option value="2010">2010</option>
+			<option value="2009">2009</option>
+			<option value="2008">2008</option>
+		</select>
+		<select id="month">
+			<option value="0">January</option>
+			<option value="1">February</option>
+			<option value="2">March</option>
+			<option value="3">April</option>
+			<option value="4">May</option>
+			<option value="5">June</option>
+			<option value="6">July</option>
+			<option value="7">August</option>
+			<option value="8">September</option>
+			<option value="9">October</option>
+			<option value="10">November</option>
+			<option value="11">December</option>
+		</select>
+			<select id="day">
+			<option value="1">1st</option>
+			<option value="2">2nd</option>
+			<option value="3">3rd</option>
+			<option value="4">4th</option>
+			<option value="5">5th</option>
+			<option value="6">6th</option>
+			<option value="7">7th</option>
+			<option value="8">8th</option>
+			<option value="9">9th</option>
+			<option value="10">10th</option>
+			<option value="11">11th</option>
+			<option value="12">12th</option>
+			<option value="13">13th</option>
+			<option value="14">14th</option>
+			<option value="15">15th</option>
+			<option value="16">16th</option>
+			<option value="17">17th</option>
+			<option value="18">18th</option>
+			<option value="19">19th</option>
+			<option value="20">20th</option>
+			<option value="21">21st</option>
+			<option value="22">22nd</option>
+			<option value="23">23rd</option>
+			<option value="24">24th</option>
+			<option value="25">25th</option>
+			<option value="26">26th</option>
+			<option value="27">27th</option>
+			<option value="28">28th</option>
+			<option value="29">29th</option>
+			<option value="30">30th</option>
+			<option value="31">31st</option>
+		</select>
+		<button type="button" onclick="loadAPIResponse()">Return Results</button>
+	</form>
+	
+	<div id="myDiv"></div>
+	
+</div>
 </body>
 </html>

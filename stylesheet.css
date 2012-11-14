@@ -1,0 +1,66 @@
+  /* TOP LEVEL & FRAMEWORK */
+	* {
+	    margin: 0;
+	    padding: 0;
+	    }
+	
+	html, body {
+		font-family: ‘lucida console’, sans-serif;
+		background-color: #069;
+		color: #FFF
+		}
+	
+	h2, h3  { 
+		margin-left: 10px;
+	}
+	
+	p {
+		margin: 10px 0;;
+	}
+	
+	li {
+		list-style: none;
+		color: #6F3;
+		font-weight: bold;
+		margin-left: 20px;
+	}
+	
+	a:link, a:visited, a:hover, a:active {
+		color: #C8C8D2;
+	}
+  
+	#wrapper {
+		width: 960px;
+		float: left;
+	}
+
+	#myDiv {
+		margin: 25px 0;
+	}
+		
+	#summary {
+		text-align: justify;
+		font-size: 90%;
+		width: 400px;
+		margin: 10px 0;
+		padding: 5px;
+		border: 1px solid #6F3;
+		position: absolute;
+		left: 395px;
+		top: 30px;
+	}
+		
+	form {
+		margin: 10px 0 10px 10px;
+	}
+	
+	
+	#footer {
+		position: absolute;
+		bottom: 10px;
+		left: 410px;
+		text-align: center;
+		font-size: 50%;
+	}
+
+
