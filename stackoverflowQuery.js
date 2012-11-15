@@ -41,7 +41,7 @@ function loadAPIResponse()
 			document.getElementById('myDiv').innerHTML = "<h3>Questions posted since " +monthToInt +"/"
 			+document.getElementById("day").value +"/" +document.getElementById("year").value +"</h3><br>";
 			for (var j = 0; j < 10; j++) {
-				document.getElementById('myDiv').innerHTML += "<ul><li>votes: "	+ questionsArray[j].title
+				document.getElementById('myDiv').innerHTML += "<ul><li>votes: "	+ questionsArray[j].score
 				+ "</li><li>asked date: " + epochToHumanDate(questionsArray[j].createDate)
 				+ "</li><li>number of answers: " + questionsArray[j].noAnswers
 				+ "</li><li><a href=http://stackoverflow.com/questions/" + questionsArray[j].question_id
